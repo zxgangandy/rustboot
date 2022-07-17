@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 log = "0.4.17"
 log4rs = "1.1.1"
+lazy_static = "1.4.0"
+rocket = { version = "0.5.0-rc.2",features = ["json"] }
+rbatis = { version = "3.1", default-features = false, features = ["mysql","runtime-tokio-rustls"] }
