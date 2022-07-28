@@ -11,12 +11,11 @@ use std::sync::Arc;
 use log::{info, error};
 use log4rs;
 use rbatis::rbatis::Rbatis;
+use rbatis::db::DBPoolOptions;
 use rocket::fairing::AdHoc;
 use utils::errors;
 
-// 定义全局变量
 lazy_static! {
-    // Rbatis类型变量 RB，用于数据库查询
     static ref RB: Rbatis = Rbatis::new();
 }
 
@@ -33,9 +32,11 @@ async fn main() -> errors::Result<()> {
     info!("hnt tools booting up");
     error!("Connecting to database...");
 
-    RB.link("mysql://root:root@127.0.0.1:3306/test")
+    let mut opt = DBPoolOptions::new();
+    opt.max_connections = 50;
+    RB.link_opt("mysql://root:root@127.0.0.1:3306/test", opt)
         .await
-        .unwrap();
+        .expect("Rbatis connect database failed!!!");
     let rb = Arc::new(&RB);
 
     let _ = rocket::build()
